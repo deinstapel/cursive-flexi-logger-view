@@ -1,6 +1,6 @@
 [package]
 name = "cursive-flexi-logger-view"
-version = "0.1.0"
+version = "0.1.1-alpha.0"
 authors = ["Fin Christensen <christensen.fin@gmail.com>", "Johannes Wünsche <johannes.wuensche97@gmail.com>"]
 edition = "2018"
 description = "An alternative debug view for gyscos/cursive using emabee/flexi_logger"
