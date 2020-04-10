@@ -43,13 +43,54 @@
 //! ```
 //!
 //! Look into the `FlexiLoggerView` documentation for a detailed explanation.
+//!
+//! ## Add toggleable flexi_logger debug console view
+//! 
+//! This crate also provide utility functions, which is simplify usage of `FlexiLoggerView`, providing
+//! debug console view like [`Cursive::toggle_debug_console`](/cursive/latest/cursive/struct.Cursive.html#method.toggle_debug_console).
+//! There is 3 functions:
+//! 
+//!  - `show_flexi_logger_debug_console`: show debug console view; 
+//!  - `hide_flexi_logger_debug_console`: hide debug console view (if visible);
+//!  - `toggle_flexi_logger_debug_console`: show the debug console view, or hide it if it's already visible.
+//! 
+//! ```rust
+//! use cursive::Cursive;
+//! use cursive_flexi_logger_view::{show_flexi_logger_debug_console, hide_flexi_logger_debug_console, toggle_flexi_logger_debug_console};
+//! use flexi_logger::{Logger, LogTarget};
+//!
+//! fn main() {
+//!     // we need to initialize cursive first, as the cursive-flexi-logger
+//!     // needs a cursive callback sink to notify cursive about screen refreshs
+//!     // when a new log message arrives
+//!     let mut siv = Cursive::default();
+//!
+//!     Logger::with_env_or_str("trace")
+//!         .log_target(LogTarget::FileAndWriter(
+//!             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
+//!         ))
+//!         .directory("logs")
+//!         .suppress_timestamp()
+//!         .format(flexi_logger::colored_with_thread)
+//!         .start()
+//!         .expect("failed to initialize logger!");
+//!
+//!     siv.add_global_callback('~', toggle_flexi_logger_debug_console);  // Bind '~' key to show/hide debug console view
+//!     siv.add_global_callback('s', show_flexi_logger_debug_console);  // Bind 's' key to show debug console view 
+//!     siv.add_global_callback('h', hide_flexi_logger_debug_console);  // Bind 'h' key to hide debug console view 
+//!
+//!     log::info!("test log message");
+//!     // siv.run();
+//! }
+//! ```
+
 
 use arraydeque::{ArrayDeque, Wrapping};
 use cursive::theme::{BaseColor, Color};
 use cursive::utils::markup::StyledString;
-use cursive::view::{View, Scrollable, ScrollStrategy};
-use cursive::views::ScrollView;
-use cursive::{Cursive, Printer, Vec2, CbSink};
+use cursive::view::{Nameable, ScrollStrategy, Scrollable, View};
+use cursive::views::{Dialog, ScrollView};
+use cursive::{CbSink, Cursive, Printer, Vec2};
 use flexi_logger::{writers::LogWriter, DeferredNow, Level, Record};
 
 use std::sync::{Arc, Mutex};
@@ -57,7 +98,9 @@ use std::thread;
 
 type LogBuffer = ArrayDeque<[StyledString; 2048], Wrapping>;
 
-lazy_static::lazy_static!{
+static FLEXI_LOGGER_DEBUG_VIEW_NAME: &str = "_flexi_debug_view";
+
+lazy_static::lazy_static! {
     static ref LOGS: Arc<Mutex<LogBuffer>> = Arc::new(Mutex::new(LogBuffer::new()));
 }
 
@@ -249,5 +292,120 @@ impl LogWriter for CursiveLogWriter {
 
     fn max_log_level(&self) -> log::LevelFilter {
         log::LevelFilter::max()
+    }
+}
+
+/// Show the flexi_logger debug console.
+///
+/// This is analog to [`Cursive::show_debug_console`](/cursive/latest/cursive/struct.Cursive.html#method.show_debug_console).
+///
+/// # Add binding to show flexi_logger debug view
+///
+/// ```rust
+/// use cursive::Cursive;
+/// use cursive_flexi_logger_view::show_flexi_logger_debug_console;
+/// use flexi_logger::{Logger, LogTarget};
+///
+/// fn main() {
+///     // we need to initialize cursive first, as the cursive-flexi-logger
+///     // needs a cursive callback sink to notify cursive about screen refreshs
+///     // when a new log message arrives
+///     let mut siv = Cursive::default();
+///
+///     Logger::with_env_or_str("trace")
+///         .log_target(LogTarget::FileAndWriter(
+///             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
+///         ))
+///         .directory("logs")
+///         .suppress_timestamp()
+///         .format(flexi_logger::colored_with_thread)
+///         .start()
+///         .expect("failed to initialize logger!");
+///
+///     siv.add_global_callback('~', show_flexi_logger_debug_console);  // Add binding to show flexi_logger debug view
+///
+///     // siv.run();
+/// }
+/// ```
+pub fn show_flexi_logger_debug_console(siv: &mut Cursive) {
+    siv.add_layer(
+        Dialog::around(FlexiLoggerView::scrollable().with_name(FLEXI_LOGGER_DEBUG_VIEW_NAME))
+            .title("Debug console"),
+    );
+}
+
+/// Hide the flexi_logger debug console (if visible).
+///
+/// # Add binding to hide flexi_logger debug view
+///
+/// ```rust
+/// use cursive::Cursive;
+/// use cursive_flexi_logger_view::hide_flexi_logger_debug_console;
+/// use flexi_logger::{Logger, LogTarget};
+///
+/// fn main() {
+///     // we need to initialize cursive first, as the cursive-flexi-logger
+///     // needs a cursive callback sink to notify cursive about screen refreshs
+///     // when a new log message arrives
+///     let mut siv = Cursive::default();
+///
+///     Logger::with_env_or_str("trace")
+///         .log_target(LogTarget::FileAndWriter(
+///             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
+///         ))
+///         .directory("logs")
+///         .suppress_timestamp()
+///         .format(flexi_logger::colored_with_thread)
+///         .start()
+///         .expect("failed to initialize logger!");
+///
+///     siv.add_global_callback('~', hide_flexi_logger_debug_console);  // Add binding to hide flexi_logger debug view
+///
+///     // siv.run();
+/// }
+/// ```
+pub fn hide_flexi_logger_debug_console(siv: &mut Cursive) {
+    if let Some(pos) = siv.screen_mut().find_layer_from_name(FLEXI_LOGGER_DEBUG_VIEW_NAME) {
+        siv.screen_mut().remove_layer(pos);
+    }
+}
+
+/// Show the flexi_logger debug console, or hide it if it's already visible.
+///
+/// This is analog to [`Cursive::toggle_debug_console`](/cursive/latest/cursive/struct.Cursive.html#method.toggle_debug_console).
+///
+/// # Enable toggleable flexi_logger debug view
+///
+/// ```rust
+/// use cursive::Cursive;
+/// use cursive_flexi_logger_view::toggle_flexi_logger_debug_console;
+/// use flexi_logger::{Logger, LogTarget};
+///
+/// fn main() {
+///     // we need to initialize cursive first, as the cursive-flexi-logger
+///     // needs a cursive callback sink to notify cursive about screen refreshs
+///     // when a new log message arrives
+///     let mut siv = Cursive::default();
+///
+///     Logger::with_env_or_str("trace")
+///         .log_target(LogTarget::FileAndWriter(
+///             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
+///         ))
+///         .directory("logs")
+///         .suppress_timestamp()
+///         .format(flexi_logger::colored_with_thread)
+///         .start()
+///         .expect("failed to initialize logger!");
+///
+///     siv.add_global_callback('~', toggle_flexi_logger_debug_console);  // Enable toggleable flexi_logger debug view
+///
+///     // siv.run();
+/// }
+/// ```
+pub fn toggle_flexi_logger_debug_console(siv: &mut Cursive) {
+    if let Some(pos) = siv.screen_mut().find_layer_from_name(FLEXI_LOGGER_DEBUG_VIEW_NAME) {
+        siv.screen_mut().remove_layer(pos);
+    } else {
+        show_flexi_logger_debug_console(siv);
     }
 }
