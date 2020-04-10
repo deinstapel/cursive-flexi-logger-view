@@ -336,7 +336,7 @@ pub fn show_flexi_logger_debug_console(siv: &mut Cursive) {
 
 /// Hide the flexi_logger debug console (if visible).
 ///
-/// # Add binding to show flexi_logger debug view
+/// # Add binding to hide flexi_logger debug view
 ///
 /// ```rust
 /// use cursive::Cursive;
