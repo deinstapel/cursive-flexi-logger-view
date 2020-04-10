@@ -43,6 +43,47 @@
 //! ```
 //!
 //! Look into the `FlexiLoggerView` documentation for a detailed explanation.
+//!
+//! ## Add toggleable flexi_logger debug console view
+//! 
+//! This crate also provide utility functions, which is simplify usage of `FlexiLoggerView`, providing
+//! debug console view like [`Cursive::toggle_debug_console`](/cursive/latest/cursive/struct.Cursive.html#method.toggle_debug_console).
+//! There is 3 functions:
+//! 
+//!  - `show_flexi_logger_debug_console`: show debug console view; 
+//!  - `hide_flexi_logger_debug_console`: hide debug console view (if visible);
+//!  - `toggle_flexi_logger_debug_console`: show the debug console view, or hide it if it's already visible.
+//! 
+//! ```rust
+//! use cursive::Cursive;
+//! use cursive_flexi_logger_view::{show_flexi_logger_debug_console, hide_flexi_logger_debug_console, toggle_flexi_logger_debug_console};
+//! use flexi_logger::{Logger, LogTarget};
+//!
+//! fn main() {
+//!     // we need to initialize cursive first, as the cursive-flexi-logger
+//!     // needs a cursive callback sink to notify cursive about screen refreshs
+//!     // when a new log message arrives
+//!     let mut siv = Cursive::default();
+//!
+//!     Logger::with_env_or_str("trace")
+//!         .log_target(LogTarget::FileAndWriter(
+//!             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
+//!         ))
+//!         .directory("logs")
+//!         .suppress_timestamp()
+//!         .format(flexi_logger::colored_with_thread)
+//!         .start()
+//!         .expect("failed to initialize logger!");
+//!
+//!     siv.add_global_callback('~', toggle_flexi_logger_debug_console);  // Bind '~' key to show/hide debug console view
+//!     siv.add_global_callback('s', show_flexi_logger_debug_console);  // Bind 's' key to show debug console view 
+//!     siv.add_global_callback('h', hide_flexi_logger_debug_console);  // Bind 'h' key to hide debug console view 
+//!
+//!     log::info!("test log message");
+//!     // siv.run();
+//! }
+//! ```
+
 
 use arraydeque::{ArrayDeque, Wrapping};
 use cursive::theme::{BaseColor, Color};
