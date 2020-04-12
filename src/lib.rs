@@ -184,10 +184,39 @@ impl View for FlexiLoggerView {
         let logs = LOGS.lock().unwrap();
 
         // Only print the last logs, so skip what doesn't fit
+        // TODO: consider multiline messages? and maybe only print those partially
         let skipped = logs.len().saturating_sub(printer.size.y);
 
-        for (i, msg) in logs.iter().skip(skipped).enumerate() {
-            printer.print_styled((0, i), msg.into());
+        let mut y = 0;
+        let mut x;
+        for msg in logs.iter().skip(skipped) {
+            x = 0;
+
+            let mut spans = msg.spans().rev(); // < this rev() requires a trivial patch to cursive (could obviously do it differently too)
+            let log_msg = spans.next().unwrap();
+            let spans = spans.rev();
+
+            for span in spans {
+                printer.with_style(*span.attr, |printer| {
+                    printer.print((x, y), span.content);
+                });
+                x += span.width;
+            }
+
+            let lines = log_msg.content.chars().filter(|&x| x== '\n').count();
+            if lines > 0 {
+                // print multiline messages in a new line to allow for more readable width
+                // TODO: add a config for that?
+                x = 0;
+                y += 1;
+            }
+            // TODO: \r causes issues (who would use that in a log msg though?)
+            for part in log_msg.content.split('\n') {
+                printer.with_style(*log_msg.attr, |printer| {
+                    printer.print((x, y), part);
+                });
+                y += 1;
+            }
         }
     }
 
@@ -200,7 +229,17 @@ impl View for FlexiLoggerView {
             .map(|msg| msg.width())
             .max()
             .unwrap_or(1);
-        let h = logs.len();
+        let h = logs
+            .iter()
+            .map(|msg| {
+                let lines = msg.spans().map(|x| x.content.chars().filter(|&x| x == '\n').count()).sum::<usize>();
+                if lines > 0 {
+                    lines + 2
+                } else {
+                    lines + 1
+                }
+            })
+            .sum::<usize>();
         let w = std::cmp::max(w, constraint.x);
         let h = std::cmp::max(h, constraint.y);
 
