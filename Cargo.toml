@@ -16,6 +16,7 @@ arraydeque = "0.4.5"
 flexi_logger = "0.15.1"
 lazy_static = "1.4.0"
 log = "0.4.8"
+unicode-width = "0.1.7"
 
 [dev-dependencies]
 cursive = "0.15.0"

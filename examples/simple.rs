@@ -41,6 +41,9 @@ fn main() {
         log::info!("An info log message");
         std::thread::sleep(Duration::from_secs(1));
 
+        log::debug!("Really detailed debug information\nfoo: 5\nbar: 42");
+        std::thread::sleep(Duration::from_secs(1));
+
         log::warn!("A warning log message");
         std::thread::sleep(Duration::from_secs(1));
 

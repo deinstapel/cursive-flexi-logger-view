@@ -92,6 +92,7 @@ use cursive_core::view::{Nameable, ScrollStrategy, Scrollable, View};
 use cursive_core::views::{Dialog, ScrollView};
 use cursive_core::{CbSink, Cursive, Printer, Vec2};
 use flexi_logger::{writers::LogWriter, DeferredNow, Level, Record};
+use unicode_width::UnicodeWidthStr;
 
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -184,10 +185,33 @@ impl View for FlexiLoggerView {
         let logs = LOGS.lock().unwrap();
 
         // Only print the last logs, so skip what doesn't fit
+        // TODO: consider multiline messages
         let skipped = logs.len().saturating_sub(printer.size.y);
 
-        for (i, msg) in logs.iter().skip(skipped).enumerate() {
-            printer.print_styled((0, i), msg.into());
+        let mut y = 0;
+        for msg in logs.iter().skip(skipped) {
+            let mut x = 0;
+
+            // Assume the log message is the last styled span
+            let log_msg_index = msg.spans_raw().len() - 1;
+
+            for span in msg.spans().take(log_msg_index) {
+                printer.with_style(*span.attr, |printer| {
+                    printer.print((x, y), span.content);
+                });
+                x += span.width;
+            }
+
+            let log_msg = msg.spans().skip(log_msg_index).next().unwrap();
+            for part in log_msg.content.split('\n') {
+                printer.with_style(*log_msg.attr, |printer| {
+                    printer.print((x, y), part);
+                });
+                y += 1;
+                // x is not modified ⇒ multiline messages look like this:
+                // DEBUG <src/main.rs:47> first line
+                //                        second line
+            }
         }
     }
 
@@ -197,10 +221,22 @@ impl View for FlexiLoggerView {
         // The longest line sets the width
         let w = logs
             .iter()
-            .map(|msg| msg.width())
+            .map(|msg|
+                msg.spans().map(|x|
+                    // if the log message contains more than one line,
+                    // only the longest line should be considered
+                    // (definitely not the total content.len())
+                    x.content.split('\n').map(|x| x.width()).max().unwrap()
+                ).sum::<usize>()
+            )
             .max()
             .unwrap_or(1);
-        let h = logs.len();
+        let h = logs
+            .iter()
+            .map(|msg|
+                msg.spans().last().map(|x| x.content.split('\n').count()).unwrap()
+            )
+            .sum::<usize>();
         let w = std::cmp::max(w, constraint.x);
         let h = std::cmp::max(h, constraint.y);
 
