@@ -13,14 +13,14 @@ documentation = "https://docs.rs/cursive-flexi-logger-view"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cursive = { version = "0.14.0", default-features = false }
+cursive = { version = "0.15.0", default-features = false }
 flexi_logger = "0.15.1"
 arraydeque = "0.4.5"
 log = "0.4.8"
 lazy_static = "1.4.0"
 
 [dev-dependencies]
-cursive = "0.14.0"
+cursive = "0.15.0"
 
 [badges]
 travis-ci = { repository = "deinstapel/cursive-flexi-logger-view" }
