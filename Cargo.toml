@@ -1,26 +1,24 @@
 [package]
-name = "cursive-flexi-logger-view"
-version = "0.2.2-alpha.0"
 authors = ["Fin Christensen <christensen.fin@gmail.com>", "Johannes Wünsche <johannes.wuensche97@gmail.com>"]
-edition = "2018"
 description = "An alternative debug view for gyscos/cursive using emabee/flexi_logger"
-license = "BSD-3-Clause"
-readme = "README.md"
-keywords = ["cursive-views", "cursive", "logging", "debug", "terminal"]
-repository = "https://github.com/deinstapel/cursive-flexi-logger-view"
 documentation = "https://docs.rs/cursive-flexi-logger-view"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = "2018"
+keywords = ["cursive-views", "cursive", "logging", "debug", "terminal"]
+license = "BSD-3-Clause"
+name = "cursive-flexi-logger-view"
+readme = "README.md"
+repository = "https://github.com/deinstapel/cursive-flexi-logger-view"
+version = "0.2.2-alpha.0"
 
 [dependencies]
-cursive = { version = "0.14.0", default-features = false }
-flexi_logger = "0.15.1"
+cursive_core = "^0.1"
 arraydeque = "0.4.5"
-log = "0.4.8"
+flexi_logger = "0.15.1"
 lazy_static = "1.4.0"
+log = "0.4.8"
 
 [dev-dependencies]
-cursive = "0.14.0"
+cursive = "0.15.0"
 
 [badges]
 travis-ci = { repository = "deinstapel/cursive-flexi-logger-view" }

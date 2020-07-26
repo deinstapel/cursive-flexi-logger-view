@@ -15,7 +15,7 @@
 //! add it to cursive.
 //!
 //! ```rust
-//! use cursive::Cursive;
+//! use cursive::{Cursive, CursiveExt};
 //! use cursive_flexi_logger_view::FlexiLoggerView;
 //! use flexi_logger::{Logger, LogTarget};
 //!
@@ -55,7 +55,7 @@
 //!  - `toggle_flexi_logger_debug_console`: show the debug console view, or hide it if it's already visible.
 //! 
 //! ```rust
-//! use cursive::Cursive;
+//! use cursive::{Cursive, CursiveExt};
 //! use cursive_flexi_logger_view::{show_flexi_logger_debug_console, hide_flexi_logger_debug_console, toggle_flexi_logger_debug_console};
 //! use flexi_logger::{Logger, LogTarget};
 //!
@@ -86,11 +86,11 @@
 
 
 use arraydeque::{ArrayDeque, Wrapping};
-use cursive::theme::{BaseColor, Color};
-use cursive::utils::markup::StyledString;
-use cursive::view::{Nameable, ScrollStrategy, Scrollable, View};
-use cursive::views::{Dialog, ScrollView};
-use cursive::{CbSink, Cursive, Printer, Vec2};
+use cursive_core::theme::{BaseColor, Color};
+use cursive_core::utils::markup::StyledString;
+use cursive_core::view::{Nameable, ScrollStrategy, Scrollable, View};
+use cursive_core::views::{Dialog, ScrollView};
+use cursive_core::{CbSink, Cursive, Printer, Vec2};
 use flexi_logger::{writers::LogWriter, DeferredNow, Level, Record};
 
 use std::sync::{Arc, Mutex};
@@ -110,7 +110,7 @@ lazy_static::lazy_static! {
 /// # Create a plain `FlexiLoggerView`
 ///
 /// ```rust
-/// use cursive::Cursive;
+/// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::FlexiLoggerView;
 /// use flexi_logger::{Logger, LogTarget};
 ///
@@ -140,7 +140,7 @@ lazy_static::lazy_static! {
 /// # Create a scrollable `FlexiLoggerView`
 ///
 /// ```rust
-/// use cursive::Cursive;
+/// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::FlexiLoggerView;
 /// use flexi_logger::{Logger, LogTarget};
 ///
@@ -227,7 +227,7 @@ pub struct CursiveLogWriter {
 /// # Registering the cursive log writer in `flexi_logger`
 ///
 /// ```rust
-/// use cursive::Cursive;
+/// use cursive::{Cursive, CursiveExt};
 /// use flexi_logger::{Logger, LogTarget};
 ///
 /// fn main() {
@@ -302,7 +302,7 @@ impl LogWriter for CursiveLogWriter {
 /// # Add binding to show flexi_logger debug view
 ///
 /// ```rust
-/// use cursive::Cursive;
+/// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::show_flexi_logger_debug_console;
 /// use flexi_logger::{Logger, LogTarget};
 ///
@@ -339,7 +339,7 @@ pub fn show_flexi_logger_debug_console(siv: &mut Cursive) {
 /// # Add binding to hide flexi_logger debug view
 ///
 /// ```rust
-/// use cursive::Cursive;
+/// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::hide_flexi_logger_debug_console;
 /// use flexi_logger::{Logger, LogTarget};
 ///
@@ -377,7 +377,7 @@ pub fn hide_flexi_logger_debug_console(siv: &mut Cursive) {
 /// # Enable toggleable flexi_logger debug view
 ///
 /// ```rust
-/// use cursive::Cursive;
+/// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::toggle_flexi_logger_debug_console;
 /// use flexi_logger::{Logger, LogTarget};
 ///
