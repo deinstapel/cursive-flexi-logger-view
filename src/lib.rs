@@ -130,7 +130,7 @@ lazy_static::lazy_static! {
 ///         .start()
 ///         .expect("failed to initialize logger!");
 ///
-///     siv.add_layer(FlexiLoggerView{indent: true}); // add a plain flexi-logger view
+///     siv.add_layer(FlexiLoggerView::new()); // add a plain flexi-logger view
 ///
 ///     log::info!("test log message");
 ///     // siv.run();
@@ -183,6 +183,11 @@ impl FlexiLoggerView {
             .scroll_x(true)
             .scroll_y(true)
             .scroll_strategy(ScrollStrategy::StickToBottom)
+    }
+
+    /// Create a new `FlexiLoggerView`.
+    pub fn new() -> Self {
+        FlexiLoggerView { indent: true }
     }
 }
 
