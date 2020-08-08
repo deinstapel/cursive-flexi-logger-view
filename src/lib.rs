@@ -207,6 +207,20 @@ impl Indentable for ScrollView<FlexiLoggerView> {
     }
 }
 
+impl Indentable for FlexiLoggerView {
+    /// Changes a `FlexiLoggerView` to not indent messages spanning multiple lines.
+    fn no_indent(mut self) -> Self {
+        self.indent = false;
+        self
+    }
+
+    /// Changes a `FlexiLoggerView` to indent messages spanning multiple lines.
+    fn indent(mut self) -> Self {
+        self.indent = true;
+        self
+    }
+}
+
 impl View for FlexiLoggerView {
     fn draw(&self, printer: &Printer<'_, '_>) {
         let logs = LOGS.lock().unwrap();
