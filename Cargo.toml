@@ -8,7 +8,7 @@ license = "BSD-3-Clause"
 name = "cursive-flexi-logger-view"
 readme = "README.md"
 repository = "https://github.com/deinstapel/cursive-flexi-logger-view"
-version = "0.2.2-alpha.0"
+version = "0.3.0"
 
 [dependencies]
 cursive_core = "^0.1"
