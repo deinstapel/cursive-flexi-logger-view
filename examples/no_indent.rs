@@ -1,7 +1,7 @@
 use cursive::view::Boxable;
 use cursive::views::Dialog;
 use cursive::{Cursive, CursiveExt, Vec2};
-use cursive_flexi_logger_view::FlexiLoggerView;
+use cursive_flexi_logger_view::{FlexiLoggerView, Indentable};
 
 use std::time::Duration;
 
@@ -22,7 +22,7 @@ fn main() {
         .expect("failed to initialize logger!");
 
     siv.add_layer(
-        Dialog::around(FlexiLoggerView::scrollable())
+        Dialog::around(FlexiLoggerView::scrollable().no_indent())
             .title("Flexi-Logger View")
             .button("Quit", |siv| siv.quit())
             .fixed_size(Vec2::new(72, 10)),
