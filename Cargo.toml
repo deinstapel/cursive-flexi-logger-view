@@ -11,7 +11,7 @@ repository = "https://github.com/deinstapel/cursive-flexi-logger-view"
 version = "0.3.1-alpha.0"
 
 [dependencies]
-cursive_core = "^0.1"
+cursive_core = "^0.2"
 arraydeque = "0.4.5"
 flexi_logger = "0.15.1"
 lazy_static = "1.4.0"
@@ -19,7 +19,7 @@ log = "0.4.8"
 unicode-width = "0.1.7"
 
 [dev-dependencies]
-cursive = "0.15.0"
+cursive = "0.16.0"
 
 [badges]
 travis-ci = { repository = "deinstapel/cursive-flexi-logger-view" }
