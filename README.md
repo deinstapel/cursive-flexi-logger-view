@@ -1,9 +1,9 @@
 <h1 align="center">Welcome to cursive-flexi-logger-view 👋</h1>
 <p align="center">
-  <a href="https://travis-ci.org/deinstapel/cursive-flexi-logger-view">
+  <a href="https://github.com/deinstapel/cursive-flexi-logger-view/actions">
     <img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fdeinstapel.github.io%2Fcursive-flexi-logger-view%2Fstable-build.json" alt="stable build">
   </a>
-  <a href="https://travis-ci.org/deinstapel/cursive-flexi-logger-view">
+  <a href="https://github.com/deinstapel/cursive-flexi-logger-view/actions">
     <img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fdeinstapel.github.io%2Fcursive-flexi-logger-view%2Fnightly-build.json" alt="nightly build">
   </a>
   <a href="https://crates.io/crates/cursive-flexi-logger-view">
@@ -87,9 +87,7 @@ Look into the [documentation](https://docs.rs/cursive-flexi-logger-view) for a d
 
 If you find any bugs/unexpected behaviour or you have a proposition for future changes open an issue describing the current behaviour and what you expected.
 
-## Development [![cargo test](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fdeinstapel.github.io%2Fcursive-flexi-logger-view%2Fcargo-test.json)](https://travis-ci.org/deinstapel/cursive-flexi-logger-view)
-
-> TBD
+## Development [![cargo test](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fdeinstapel.github.io%2Fcursive-flexi-logger-view%2Fcargo-test.json)](https://github.com/deinstapel/cursive-flexi-logger-view/actions)
 
 ### Running the tests
 
