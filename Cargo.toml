@@ -20,6 +20,3 @@ unicode-width = "0.1"
 
 [dev-dependencies]
 cursive = "0.16"
-
-[badges]
-travis-ci = { repository = "deinstapel/cursive-flexi-logger-view" }
