@@ -1,4 +1,4 @@
-use cursive::view::Boxable;
+use cursive::view::Resizable;
 use cursive::views::Dialog;
 use cursive::{Cursive, CursiveExt, Vec2};
 use cursive_flexi_logger_view::FlexiLoggerView;
