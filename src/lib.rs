@@ -17,7 +17,7 @@
 //! ```rust
 //! use cursive::{Cursive, CursiveExt};
 //! use cursive_flexi_logger_view::FlexiLoggerView;
-//! use flexi_logger::{Logger, LogTarget};
+//! use flexi_logger::Logger;
 //!
 //! fn main() {
 //!     // we need to initialize cursive first, as the cursive-flexi-logger
@@ -25,12 +25,14 @@
 //!     // when a new log message arrives
 //!     let mut siv = Cursive::default();
 //!
-//!     Logger::with_env_or_str("trace")
-//!         .log_target(LogTarget::FileAndWriter(
-//!             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
-//!         ))
-//!         .directory("logs")
-//!         .suppress_timestamp()
+//!     Logger::try_with_env_or_str("trace")
+//!         .expect("Could not create Logger from environment :(")
+//!         .log_to_file_and_writer(
+//!            flexi_logger::FileSpec::default()
+//!                 .directory("logs")
+//!                 .suppress_timestamp(),
+//!             cursive_flexi_logger_view::cursive_flexi_logger(&siv)
+//!         )
 //!         .format(flexi_logger::colored_with_thread)
 //!         .start()
 //!         .expect("failed to initialize logger!");
@@ -57,7 +59,7 @@
 //! ```rust
 //! use cursive::{Cursive, CursiveExt};
 //! use cursive_flexi_logger_view::{show_flexi_logger_debug_console, hide_flexi_logger_debug_console, toggle_flexi_logger_debug_console};
-//! use flexi_logger::{Logger, LogTarget};
+//! use flexi_logger::Logger;
 //!
 //! fn main() {
 //!     // we need to initialize cursive first, as the cursive-flexi-logger
@@ -65,12 +67,14 @@
 //!     // when a new log message arrives
 //!     let mut siv = Cursive::default();
 //!
-//!     Logger::with_env_or_str("trace")
-//!         .log_target(LogTarget::FileAndWriter(
-//!             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
-//!         ))
-//!         .directory("logs")
-//!         .suppress_timestamp()
+//!     Logger::try_with_env_or_str("trace")
+//!         .expect("Could not create Logger from environment :(")
+//!         .log_to_file_and_writer(
+//!            flexi_logger::FileSpec::default()
+//!                 .directory("logs")
+//!                 .suppress_timestamp(),
+//!             cursive_flexi_logger_view::cursive_flexi_logger(&siv)
+//!         )
 //!         .format(flexi_logger::colored_with_thread)
 //!         .start()
 //!         .expect("failed to initialize logger!");
@@ -112,7 +116,7 @@ lazy_static::lazy_static! {
 /// ```rust
 /// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::FlexiLoggerView;
-/// use flexi_logger::{Logger, LogTarget};
+/// use flexi_logger::Logger;
 ///
 /// fn main() {
 ///     // we need to initialize cursive first, as the cursive-flexi-logger
@@ -120,12 +124,14 @@ lazy_static::lazy_static! {
 ///     // when a new log message arrives
 ///     let mut siv = Cursive::default();
 ///
-///     Logger::with_env_or_str("trace")
-///         .log_target(LogTarget::FileAndWriter(
-///             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
-///         ))
-///         .directory("logs")
-///         .suppress_timestamp()
+///     Logger::try_with_env_or_str("trace")
+///         .expect("Could not create Logger from environment :(")
+///         .log_to_file_and_writer(
+///            flexi_logger::FileSpec::default()
+///                 .directory("logs")
+///                 .suppress_timestamp(),
+///             cursive_flexi_logger_view::cursive_flexi_logger(&siv)
+///         )
 ///         .format(flexi_logger::colored_with_thread)
 ///         .start()
 ///         .expect("failed to initialize logger!");
@@ -142,7 +148,7 @@ lazy_static::lazy_static! {
 /// ```rust
 /// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::FlexiLoggerView;
-/// use flexi_logger::{Logger, LogTarget};
+/// use flexi_logger::Logger;
 ///
 /// fn main() {
 ///     // we need to initialize cursive first, as the cursive-flexi-logger
@@ -150,12 +156,14 @@ lazy_static::lazy_static! {
 ///     // when a new log message arrives
 ///     let mut siv = Cursive::default();
 ///
-///     Logger::with_env_or_str("trace")
-///         .log_target(LogTarget::FileAndWriter(
-///             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
-///         ))
-///         .directory("logs")
-///         .suppress_timestamp()
+///     Logger::try_with_env_or_str("trace")
+///         .expect("Could not create Logger from environment :(")
+///         .log_to_file_and_writer(
+///            flexi_logger::FileSpec::default()
+///                 .directory("logs")
+///                 .suppress_timestamp(),
+///             cursive_flexi_logger_view::cursive_flexi_logger(&siv)
+///         )
 ///         .format(flexi_logger::colored_with_thread)
 ///         .start()
 ///         .expect("failed to initialize logger!");
@@ -311,7 +319,7 @@ pub struct CursiveLogWriter {
 ///
 /// ```rust
 /// use cursive::{Cursive, CursiveExt};
-/// use flexi_logger::{Logger, LogTarget};
+/// use flexi_logger::Logger;
 ///
 /// fn main() {
 ///     // we need to initialize cursive first, as the cursive-flexi-logger
@@ -319,12 +327,14 @@ pub struct CursiveLogWriter {
 ///     // when a new log message arrives
 ///     let mut siv = Cursive::default();
 ///
-///     Logger::with_env_or_str("trace")
-///         .log_target(LogTarget::FileAndWriter(
-///             cursive_flexi_logger_view::cursive_flexi_logger(&siv), // register log writer
-///         ))
-///         .directory("logs")
-///         .suppress_timestamp()
+///     Logger::try_with_env_or_str("trace")
+///         .expect("Could not create Logger from environment :(")
+///         .log_to_file_and_writer(
+///            flexi_logger::FileSpec::default()
+///                 .directory("logs")
+///                 .suppress_timestamp(),
+///             cursive_flexi_logger_view::cursive_flexi_logger(&siv)
+///         )
 ///         .format(flexi_logger::colored_with_thread)
 ///         .start()
 ///         .expect("failed to initialize logger!");
@@ -335,6 +345,14 @@ pub fn cursive_flexi_logger(siv: &Cursive) -> Box<CursiveLogWriter> {
         sink: siv.cb_sink().clone(),
     })
 }
+
+use time::{
+    macros::format_description,
+    format_description::FormatItem,
+
+};
+
+const FORMAT: &[FormatItem<'static>] = format_description!("%T%.3f");
 
 impl LogWriter for CursiveLogWriter {
     fn write(&self, now: &mut DeferredNow, record: &Record) -> std::io::Result<()> {
@@ -347,7 +365,7 @@ impl LogWriter for CursiveLogWriter {
         });
 
         let mut line = StyledString::new();
-        line.append_styled(format!("{}", now.now().format("%T%.3f")), color);
+        line.append_styled(format!("{}", now.format(FORMAT)), color);
         line.append_plain(format!(
             " [{}] ",
             thread::current().name().unwrap_or("(unnamed)"),
@@ -388,7 +406,7 @@ impl LogWriter for CursiveLogWriter {
 /// ```rust
 /// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::show_flexi_logger_debug_console;
-/// use flexi_logger::{Logger, LogTarget};
+/// use flexi_logger::Logger;
 ///
 /// fn main() {
 ///     // we need to initialize cursive first, as the cursive-flexi-logger
@@ -396,12 +414,14 @@ impl LogWriter for CursiveLogWriter {
 ///     // when a new log message arrives
 ///     let mut siv = Cursive::default();
 ///
-///     Logger::with_env_or_str("trace")
-///         .log_target(LogTarget::FileAndWriter(
-///             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
-///         ))
-///         .directory("logs")
-///         .suppress_timestamp()
+///     Logger::try_with_env_or_str("trace")
+///         .expect("Could not create Logger from environment :(")
+///         .log_to_file_and_writer(
+///            flexi_logger::FileSpec::default()
+///                 .directory("logs")
+///                 .suppress_timestamp(),
+///             cursive_flexi_logger_view::cursive_flexi_logger(&siv)
+///         )
 ///         .format(flexi_logger::colored_with_thread)
 ///         .start()
 ///         .expect("failed to initialize logger!");
@@ -425,7 +445,7 @@ pub fn show_flexi_logger_debug_console(siv: &mut Cursive) {
 /// ```rust
 /// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::hide_flexi_logger_debug_console;
-/// use flexi_logger::{Logger, LogTarget};
+/// use flexi_logger::Logger;
 ///
 /// fn main() {
 ///     // we need to initialize cursive first, as the cursive-flexi-logger
@@ -433,12 +453,14 @@ pub fn show_flexi_logger_debug_console(siv: &mut Cursive) {
 ///     // when a new log message arrives
 ///     let mut siv = Cursive::default();
 ///
-///     Logger::with_env_or_str("trace")
-///         .log_target(LogTarget::FileAndWriter(
-///             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
-///         ))
-///         .directory("logs")
-///         .suppress_timestamp()
+///     Logger::try_with_env_or_str("trace")
+///         .expect("Could not create Logger from environment :(")
+///         .log_to_file_and_writer(
+///            flexi_logger::FileSpec::default()
+///                 .directory("logs")
+///                 .suppress_timestamp(),
+///             cursive_flexi_logger_view::cursive_flexi_logger(&siv)
+///         )
 ///         .format(flexi_logger::colored_with_thread)
 ///         .start()
 ///         .expect("failed to initialize logger!");
@@ -466,7 +488,7 @@ pub fn hide_flexi_logger_debug_console(siv: &mut Cursive) {
 /// ```rust
 /// use cursive::{Cursive, CursiveExt};
 /// use cursive_flexi_logger_view::toggle_flexi_logger_debug_console;
-/// use flexi_logger::{Logger, LogTarget};
+/// use flexi_logger::Logger;
 ///
 /// fn main() {
 ///     // we need to initialize cursive first, as the cursive-flexi-logger
@@ -474,12 +496,14 @@ pub fn hide_flexi_logger_debug_console(siv: &mut Cursive) {
 ///     // when a new log message arrives
 ///     let mut siv = Cursive::default();
 ///
-///     Logger::with_env_or_str("trace")
-///         .log_target(LogTarget::FileAndWriter(
-///             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
-///         ))
-///         .directory("logs")
-///         .suppress_timestamp()
+///     Logger::try_with_env_or_str("trace")
+///         .expect("Could not create Logger from environment :(")
+///         .log_to_file_and_writer(
+///            flexi_logger::FileSpec::default()
+///                 .directory("logs")
+///                 .suppress_timestamp(),
+///             cursive_flexi_logger_view::cursive_flexi_logger(&siv)
+///         )
 ///         .format(flexi_logger::colored_with_thread)
 ///         .start()
 ///         .expect("failed to initialize logger!");

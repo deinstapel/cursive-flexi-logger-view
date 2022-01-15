@@ -11,12 +11,14 @@ fn main() {
     // when a new log message arrives
     let mut siv = Cursive::default();
 
-    flexi_logger::Logger::with_env_or_str("trace")
-        .log_target(flexi_logger::LogTarget::FileAndWriter(
+    flexi_logger::Logger::try_with_env_or_str("trace")
+        .expect("Could not create Logger from environment :(")
+        .log_to_file_and_writer(
+            flexi_logger::FileSpec::default()
+            .directory("logs")
+            .suppress_timestamp(),
             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
-        ))
-        .directory("logs")
-        .suppress_timestamp()
+        )
         .format(flexi_logger::colored_with_thread)
         .start()
         .expect("failed to initialize logger!");
