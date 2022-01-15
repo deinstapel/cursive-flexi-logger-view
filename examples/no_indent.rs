@@ -15,8 +15,8 @@ fn main() {
         .expect("Could not create Logger from environment :(")
         .log_to_file_and_writer(
             flexi_logger::FileSpec::default()
-            .directory("logs")
-            .suppress_timestamp(),
+                .directory("logs")
+                .suppress_timestamp(),
             cursive_flexi_logger_view::cursive_flexi_logger(&siv),
         )
         .format(flexi_logger::colored_with_thread)

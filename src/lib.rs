@@ -346,11 +346,7 @@ pub fn cursive_flexi_logger(siv: &Cursive) -> Box<CursiveLogWriter> {
     })
 }
 
-use time::{
-    macros::format_description,
-    format_description::FormatItem,
-
-};
+use time::{format_description::FormatItem, macros::format_description};
 
 const FORMAT: &[FormatItem<'static>] = format_description!("%T%.3f");
 

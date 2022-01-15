@@ -17,8 +17,8 @@ fn main() {
             flexi_logger::FileSpec::default()
                 .directory("logs")
                 .suppress_timestamp(),
-            cursive_flexi_logger_view::cursive_flexi_logger(&siv)
-            )
+            cursive_flexi_logger_view::cursive_flexi_logger(&siv),
+        )
         .format(flexi_logger::colored_with_thread)
         .start()
         .expect("failed to initialize logger!");
