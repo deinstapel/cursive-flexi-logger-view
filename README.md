@@ -51,12 +51,12 @@ cursive-flexi-logger-view = "^0"
 
 ### Using the `FlexiLoggerView`
 
-To create a `FlexiLoggerView` you first have to register the `cursive_flexi_logger` as a `LogTarget` in `flexi_logger`. After the `flexi_logger` has started, you may create a `FlexiLoggerView` instance and add it to cursive.
+To create a `FlexiLoggerView` you first have to register the `cursive_flexi_logger` as a `Writer` in `flexi_logger`. After the `flexi_logger` has started, you may create a `FlexiLoggerView` instance and add it to cursive.
 
 ```rust
 use cursive::Cursive;
 use cursive_flexi_logger_view::FlexiLoggerView;
-use flexi_logger::{Logger, LogTarget};
+use flexi_logger::Logger;
 
 fn main() {
     // we need to initialize cursive first, as the cursive-flexi-logger
@@ -64,12 +64,14 @@ fn main() {
     // when a new log message arrives
     let mut siv = Cursive::default();
 
-    Logger::with_env_or_str("trace")
-        .log_target(LogTarget::FileAndWriter(
-            cursive_flexi_logger_view::cursive_flexi_logger(&siv),
-        ))
-        .directory("logs")
-        .suppress_timestamp()
+    Logger::try_with_env_or_str("trace")
+        .expect("Could not create Logger from environment :(")
+        .log_to_file_and_writer(
+            flexi_logger::FileSpec::default()
+                .directory("logs")
+                .suppress_timestamp(),
+            cursive_flexi_logger_view::cursive_flexi_logger(&siv)
+            )
         .format(flexi_logger::colored_with_thread)
         .start()
         .expect("failed to initialize logger!");
