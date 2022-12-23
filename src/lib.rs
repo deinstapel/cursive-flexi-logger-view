@@ -175,7 +175,7 @@ lazy_static::lazy_static! {
 /// }
 /// ```
 pub struct FlexiLoggerView {
-    pub indent: bool,
+    pub indent: bool
 }
 
 pub trait Indentable {
@@ -299,11 +299,45 @@ impl View for FlexiLoggerView {
     }
 }
 
+///Possible log items
+pub enum LogItems {
+    DATETIME,
+    THREAD,
+    FILE,
+    FileLine,
+    LEVEL,
+    MESSAGE,
+    S(String)
+}
+
+use crate::LogItems::{DATETIME, FILE, FileLine, LEVEL, MESSAGE, THREAD};
+
 /// The `flexi_logger` `LogWriter` implementation for the `FlexiLoggerView`.
 ///
 /// Use the `cursive_flexi_logger` function to create an instance of this struct.
 pub struct CursiveLogWriter {
     sink: CbSink,
+    format: Vec<LogItems>,
+    time_format: String,
+}
+
+pub trait FormattableLogWriter {
+    fn with_format(self, new_format: Vec<LogItems>) -> Self;
+    fn with_time_format(self, new_format: &str) -> Self;
+}
+
+impl FormattableLogWriter for Box<CursiveLogWriter> {
+    ///Set up a custom log format
+    fn with_format(mut self, new_format: Vec<LogItems>) -> Self {
+        self.format = new_format;
+        self
+    }
+
+    /// Set up a custom format for a time
+    fn with_time_format(mut self, new_format: &str) -> Self {
+        self.time_format = new_format.to_string();
+        self
+    }
 }
 
 /// Creates a new `LogWriter` instance for the `FlexiLoggerView`. Use this to
@@ -343,12 +377,10 @@ pub struct CursiveLogWriter {
 pub fn cursive_flexi_logger(siv: &Cursive) -> Box<CursiveLogWriter> {
     Box::new(CursiveLogWriter {
         sink: siv.cb_sink().clone(),
+        format: vec![DATETIME, THREAD, LEVEL, FileLine, MESSAGE],
+        time_format: "%T%.3f".to_string()
     })
 }
-
-use time::{format_description::FormatItem, macros::format_description};
-
-const FORMAT: &[FormatItem<'static>] = format_description!("%T%.3f");
 
 impl LogWriter for CursiveLogWriter {
     fn write(&self, now: &mut DeferredNow, record: &Record) -> std::io::Result<()> {
@@ -361,18 +393,27 @@ impl LogWriter for CursiveLogWriter {
         });
 
         let mut line = StyledString::new();
-        line.append_styled(format!("{}", now.format(FORMAT)), color);
-        line.append_plain(format!(
-            " [{}] ",
-            thread::current().name().unwrap_or("(unnamed)"),
-        ));
-        line.append_styled(format!("{}", record.level()), color);
-        line.append_plain(format!(
-            " <{}:{}> ",
-            record.file().unwrap_or("(unnamed)"),
-            record.line().unwrap_or(0),
-        ));
-        line.append_styled(format!("{}", &record.args()), color);
+        for item in self.format.iter() {
+            match item {
+                DATETIME => line.append_styled(format!("{} ", now.format(&self.time_format)), color),
+                THREAD => line.append_plain(format!(
+                    "[{}] ",
+                    thread::current().name().unwrap_or("(unnamed) "),
+                )),
+                LEVEL => line.append_styled(format!("{} ", record.level()), color),
+                FILE => line.append_plain(format!(
+                    "<{}> ",
+                    record.file().unwrap_or("(unnamed)"),
+                )),
+                FileLine => line.append_plain(format!(
+                    "<{}:{}> ",
+                    record.file().unwrap_or("(unnamed)"),
+                    record.line().unwrap_or(0),
+                )),
+                MESSAGE => line.append_styled(format!("{}", &record.args()), color),
+                LogItems::S(txt) => line.append_plain(txt)
+            }
+        }
 
         LOGS.lock().unwrap().push_back(line);
         self.sink.send(Box::new(|_siv| {})).map_err(|_| {

@@ -13,7 +13,7 @@ version = "0.5.0"
 [dependencies]
 cursive_core = "0.3"
 arraydeque = "0.4"
-flexi_logger = "0.22"
+flexi_logger = "0.24.2"
 lazy_static = "1.4"
 log = "0.4"
 unicode-width = "0.1"
