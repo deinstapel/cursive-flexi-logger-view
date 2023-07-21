@@ -348,7 +348,7 @@ pub fn cursive_flexi_logger(siv: &Cursive) -> Box<CursiveLogWriter> {
 
 use time::{format_description::FormatItem, macros::format_description};
 
-const FORMAT: &[FormatItem<'static>] = format_description!("%T%.3f");
+const FORMAT: &[FormatItem<'static>] = format_description!("[hour]:[minute]:[second].[subsecond]");
 
 impl LogWriter for CursiveLogWriter {
     fn write(&self, now: &mut DeferredNow, record: &Record) -> std::io::Result<()> {
