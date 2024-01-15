@@ -346,10 +346,6 @@ pub fn cursive_flexi_logger(siv: &Cursive) -> Box<CursiveLogWriter> {
     })
 }
 
-use time::{format_description::FormatItem, macros::format_description};
-
-const FORMAT: &[FormatItem<'static>] = format_description!("%T%.3f");
-
 impl LogWriter for CursiveLogWriter {
     fn write(&self, now: &mut DeferredNow, record: &Record) -> std::io::Result<()> {
         let color = Color::Dark(match record.level() {
@@ -361,7 +357,7 @@ impl LogWriter for CursiveLogWriter {
         });
 
         let mut line = StyledString::new();
-        line.append_styled(format!("{}", now.format(FORMAT)), color);
+        line.append_styled(format!("{}", now.format("%T%.3f")), color);
         line.append_plain(format!(
             " [{}] ",
             thread::current().name().unwrap_or("(unnamed)"),
