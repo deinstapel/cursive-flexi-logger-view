@@ -11,7 +11,7 @@ repository = "https://github.com/deinstapel/cursive-flexi-logger-view"
 version = "0.5.0"
 
 [dependencies]
-cursive_core = "0.3"
+cursive_core = "0.4"
 arraydeque = "0.4"
 flexi_logger = "0.22"
 lazy_static = "1.4"
@@ -20,4 +20,4 @@ unicode-width = "0.1"
 time = "0.3.5"
 
 [dev-dependencies]
-cursive = "0.17.0"
+cursive = "0.21.0"
